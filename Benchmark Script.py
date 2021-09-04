@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[29]:
+# In[2]:
 
 
 import requests
 import os
+import glob
 from natsort import natsorted
 import json
 import csv
@@ -25,25 +26,63 @@ response.json()
 # row['metrics']['executionTime']
 
 
-# In[35]:
+# In[3]:
 
 
-dataverse = "USE TinyBenchmark;" + "\n"
+isTiny = True
+
+if isTiny:
+    dataverse = "USE TinyBenchmark;"
+else:
+    dataverse = "USE BigBenchmark;"
+
+dataverse += "\n"
 print(dataverse)
 
 
-# In[36]:
+# In[5]:
+
+
+cwd = os.getcwd()
+cwd
+
+
+# In[29]:
+
+
+# path = '/Users/andretran/Documents/Projects/AsterixDB/'
+sqlExt = "*.sql"
+queriesPath = cwd + "queries/" + sqlExt
+tinyQueriesPath = cwd + "tinyQueries/" + sqlExt
+bigQueriesPath = cwd + "bigQueries/" + sqlExt
+
+queries = glob.glob(queriesPath)
+tinyQueries = glob.glob(tinyQueriesPath)
+bigQueries = glob.glob(bigQueriesPath)
+
+if isTiny:
+    benchmarkQueries = queries + tinyQueries
+else:
+    benchmarkQueries = queries + bigQueries
+
+benchmarkQueries = natsorted(benchmarkQueries, key=os.path.basename)
+print(benchmarkQueries)
+
+
+# In[31]:
 
 
 # Import Module
 
 # Folder Path
-path = "/Users/andretran/Documents/Projects/AsterixDB/queries"
+# path = "/Users/andretran/Documents/Projects/AsterixDB/queries"
+
+# all_files = glob.glob('/Users/andretran/Documents/Projects/AsterixDB/queries/*.sql')
 
 # Change the directory
-os.chdir(path)
-jsonFile = "../tinybenchmark.json"
-csvFile = "../tinybenchmark.csv"
+os.chdir(cwd)
+jsonFile = "tinybenchmark.json"
+csvFile = "tinybenchmark.csv"
 
 def create_json_file():
     if os.path.exists(jsonFile):
@@ -67,13 +106,13 @@ def create_csv_file():
 create_json_file()
 create_csv_file()
 
-def benchmark_queries(file_path, file, index):
+def benchmark_queries(file_path, index):
     with open(file_path, 'r') as f:
         statement = f.read()
         if index != 0:
             statement = dataverse + statement
         print(statement)
-        payload = {'statement': statement, 'pretty': 'true', 'client_context_id': file, 'readonly': False}
+        payload = {'statement': statement, 'pretty': 'true', 'client_context_id': os.path.basename(file_path), 'readonly': False}
         timestamp = datetime.now()
         response = requests.post('http://localhost:19002/query/service', params = payload)
         row = response.json()
@@ -89,14 +128,10 @@ def benchmark_queries(file_path, file, index):
 
 
 # iterate through all file
-for index, file in enumerate(natsorted(os.listdir())):
+for index, file_path in enumerate(benchmarkQueries):
     # Check whether file is in text format or not
-    if file.endswith(".sql"):
-        file_path = path + "/" + file
-  
-        # call read text file function
-        print(file)
-        benchmark_queries(file_path, file, index)
+    print(os.path.basename(file_path))
+    benchmark_queries(file_path, index)
 
 print("done")
 
