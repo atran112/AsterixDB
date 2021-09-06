@@ -61,7 +61,7 @@ downloadsPath = ''
 if addr == '127.0.0.1':
     downloadsPath = cwd + "datasets/"
 elif addr == '1':
-    downloadsPath = "/local_data/downloads/"
+    downloadsPath = "/local_data/downloads/datasets"
     
 print(downloadsPath)
 
