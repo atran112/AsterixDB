@@ -114,7 +114,7 @@ def benchmark_queries(file_path, index):
         if index != 0:
             statement = dataverse + statement
         if index == 22 or 1:
-            statement = statement.replace('$PATH$', '127.0.0.1://' + cwd)
+            statement = statement.replace('$PATH$', '1://' + cwd)
             
         print(statement)
         payload = {'statement': statement, 'pretty': 'true', 'client_context_id': os.path.basename(file_path), 'readonly': False}
