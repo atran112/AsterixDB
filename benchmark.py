@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[17]:
+# In[62]:
 
 
 import requests
@@ -12,11 +12,12 @@ import json
 import csv
 from datetime import datetime
 import pandas as pd
+import socket
 
 
 # Test Script
 
-# In[18]:
+# In[63]:
 
 
 payload = {'statement': 'select 1;', 'pretty': 'true', 'client_context_id': 'xyz'}
@@ -26,7 +27,7 @@ response.json()
 # row['metrics']['executionTime']
 
 
-# In[19]:
+# In[64]:
 
 
 isTiny = True
@@ -40,7 +41,7 @@ dataverse += "\n"
 print(dataverse)
 
 
-# In[20]:
+# In[65]:
 
 
 cwd = os.getcwd()
@@ -48,7 +49,24 @@ cwd += "/"
 cwd
 
 
-# In[21]:
+# In[66]:
+
+
+addr = input("Enter address: ")
+
+# print(ip)
+
+downloadsPath = ''
+
+if addr == '127.0.0.1':
+    downloadsPath = cwd + "datasets/"
+elif addr == '1':
+    downloadsPath = "/local_data/downloads/"
+    
+print(downloadsPath)
+
+
+# In[67]:
 
 
 # path = '/Users/andretran/Documents/Projects/AsterixDB/'
@@ -71,7 +89,7 @@ benchmarkQueries = natsorted(benchmarkQueries, key=os.path.basename)
 print(benchmarkQueries)
 
 
-# In[22]:
+# In[68]:
 
 
 # Import Module
@@ -114,7 +132,7 @@ def benchmark_queries(file_path, index):
         if index != 0:
             statement = dataverse + statement
         if index == 22 or 1:
-            statement = statement.replace('$PATH$', '1://' + cwd)
+            statement = statement.replace('$PATH$', addr + '://' + downloadsPath)
             
         print(statement)
         payload = {'statement': statement, 'pretty': 'true', 'client_context_id': os.path.basename(file_path), 'readonly': False}
