@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[6]:
+# In[17]:
 
 
 import requests
@@ -16,7 +16,7 @@ import pandas as pd
 
 # Test Script
 
-# In[7]:
+# In[18]:
 
 
 payload = {'statement': 'select 1;', 'pretty': 'true', 'client_context_id': 'xyz'}
@@ -26,7 +26,7 @@ response.json()
 # row['metrics']['executionTime']
 
 
-# In[8]:
+# In[19]:
 
 
 isTiny = True
@@ -40,7 +40,7 @@ dataverse += "\n"
 print(dataverse)
 
 
-# In[17]:
+# In[20]:
 
 
 cwd = os.getcwd()
@@ -48,7 +48,7 @@ cwd += "/"
 cwd
 
 
-# In[18]:
+# In[21]:
 
 
 # path = '/Users/andretran/Documents/Projects/AsterixDB/'
@@ -71,7 +71,7 @@ benchmarkQueries = natsorted(benchmarkQueries, key=os.path.basename)
 print(benchmarkQueries)
 
 
-# In[11]:
+# In[22]:
 
 
 # Import Module
@@ -113,6 +113,9 @@ def benchmark_queries(file_path, index):
         statement = f.read()
         if index != 0:
             statement = dataverse + statement
+        if index == 22 or 1:
+            statement = statement.replace('$PATH$', '127.0.0.1://' + cwd)
+            
         print(statement)
         payload = {'statement': statement, 'pretty': 'true', 'client_context_id': os.path.basename(file_path), 'readonly': False}
         timestamp = datetime.now()
