@@ -8,7 +8,7 @@ CREATE DATASET TempStates (StateType) PRIMARY KEY ne_id;
 CREATE DATASET States (StateType) PRIMARY KEY ne_id;
 
 LOAD DATASET TempStates using localfs
-(('path'='$PATH$bigDatasets/NE_states_provinces.json'),
+(('path'='$PATH$NE_states_provinces.json'),
 ('format'='adm'));
 
 INSERT INTO States
