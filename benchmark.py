@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[62]:
+# In[114]:
 
 
 import requests
@@ -17,7 +17,7 @@ import socket
 
 # Test Script
 
-# In[63]:
+# In[115]:
 
 
 payload = {'statement': 'select 1;', 'pretty': 'true', 'client_context_id': 'xyz'}
@@ -27,10 +27,21 @@ response.json()
 # row['metrics']['executionTime']
 
 
-# In[64]:
+# Ask user for benchmark type (tiny or big)
+
+# In[116]:
 
 
-isTiny = True
+benchmarkType = input("Enter tiny for tiny benchmark or large for large benchmark: ")
+
+if benchmarkType == "tiny":
+    isTiny = True
+elif benchmarkType == "large":
+    isTiny = False
+else:
+    print("Input is invalid. Defaulting to tiny benchmark.")
+    benchmarkType = "tiny"
+    isTiny = True
 
 if isTiny:
     dataverse = "USE TinyBenchmark;"
@@ -41,7 +52,9 @@ dataverse += "\n"
 print(dataverse)
 
 
-# In[65]:
+# Check the current working directory
+
+# In[117]:
 
 
 cwd = os.getcwd()
@@ -49,24 +62,33 @@ cwd += "/"
 cwd
 
 
-# In[66]:
+# Get the path of dataset
+
+# In[118]:
 
 
 addr = input("Enter address: ")
 
 # print(ip)
 
-downloadsPath = ''
+datasetsPath = ''
 
 if addr == '127.0.0.1':
-    downloadsPath = cwd + "datasets/"
+    datasetsPath = cwd + "datasets/"
 elif addr == '1':
-    downloadsPath = "/local_data/downloads/datasets/"
-    
-print(downloadsPath)
+    datasetsPath = "/local_data/downloads/datasets/"
+else:
+    print("Address is not recognized. Defaulting to 127.0.0.1.")
+    addr = '127.0.0.1'
+    datasetsPath = cwd + "datasets/"
+
+print(addr)
+print(datasetsPath)
 
 
-# In[67]:
+# Get the queries based on if the benchmark is tiny or big
+
+# In[119]:
 
 
 # path = '/Users/andretran/Documents/Projects/AsterixDB/'
@@ -89,7 +111,25 @@ benchmarkQueries = natsorted(benchmarkQueries, key=os.path.basename)
 print(benchmarkQueries)
 
 
-# In[68]:
+# Create a results folder to store benchmark results
+
+# In[120]:
+
+
+resultsPath = cwd + 'results/'
+
+isExists = os.path.exists(resultsPath)
+print(isExists)
+
+if not isExists:
+    os.makedirs(path)
+    print("results directory created")
+print(resultsPath)
+
+
+# Create json and csv files which will hold results
+
+# In[122]:
 
 
 # Import Module
@@ -100,9 +140,12 @@ print(benchmarkQueries)
 # all_files = glob.glob('/Users/andretran/Documents/Projects/AsterixDB/queries/*.sql')
 
 # Change the directory
-os.chdir(cwd)
-jsonFile = "tinybenchmark.json"
-csvFile = "tinybenchmark.csv"
+# os.chdir(resultsPath)
+# if os.path.exists(cwd + 'results/'):
+
+dateString = datetime.utcnow().strftime('%Y-%m-%d %H_%M_%S.%f')[:-3]
+jsonFile = resultsPath + benchmarkType + "_" + dateString + ".json"
+csvFile = resultsPath + benchmarkType + "_" + dateString + ".csv"
 
 def create_json_file():
     if os.path.exists(jsonFile):
@@ -126,13 +169,19 @@ def create_csv_file():
 create_json_file()
 create_csv_file()
 
+
+# Run the benchmark and save results to csv and json files
+
+# In[123]:
+
+
 def benchmark_queries(file_path, index):
     with open(file_path, 'r') as f:
         statement = f.read()
         if index != 0:
             statement = dataverse + statement
         if index == 22 or 1:
-            statement = statement.replace('$PATH$', addr + '://' + downloadsPath)
+            statement = statement.replace('$PATH$', addr + '://' + datasetsPath)
             
         print(statement)
         payload = {'statement': statement, 'pretty': 'true', 'client_context_id': os.path.basename(file_path), 'readonly': False}
@@ -169,27 +218,3 @@ print("done")
 # 
 # - collect memory usage over time (timeseries)
 #     - peak memory (how tight a process is in terms of memory comsumption)
-
-# In[ ]:
-
-
-# statement = "DROP DATAVERSE TinyBenchmark IF EXISTS"
-# payload = {'statement': statement, 'pretty': True, 'client_context_id': 'test', 'readonly': False}
-# response = requests.post('http://localhost:19002/query/service', params = payload)
-# response.json()
-
-
-# In[14]:
-
-
-# df = pd.read_csv('tinybenchmark.csv')
-# df.dtypes
-
-
-# In[35]:
-
-
-# df['elapsedTime'] = df['elapsedTime'].str.replace('ms', '')
-# df['elapsedTime'] = df['elapsedTime'].str.replace('s', '')
-# df
-
