@@ -9,5 +9,5 @@ CREATE TYPE StateType AS{
 CREATE DATASET States (StateType) PRIMARY KEY ne_id;
 
 LOAD DATASET States using localfs
-(('path'='127.0.0.1:///Users/andretran/Documents/Projects/AsterixDB/bigDatasets/NE_states_provinces.json'),
+(('path'='$PATH$NE_states_provinces.json'),
 ('format'='adm'));

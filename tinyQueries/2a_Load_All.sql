@@ -1,4 +1,4 @@
-Use TinyBenchmark;-- USE TinyBenchmark;
+-- USE TinyBenchmark;
 
 -- 'path'='127.0.0.1:///Users/andretran/Documents/Projects/AsterixDB/datasets/OSM2015_road-network.json'
 
