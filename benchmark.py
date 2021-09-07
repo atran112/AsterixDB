@@ -113,7 +113,7 @@ print(benchmarkQueries)
 
 # Create a results folder to store benchmark results
 
-# In[120]:
+# In[131]:
 
 
 resultsPath = cwd + 'results/'
@@ -122,7 +122,7 @@ isExists = os.path.exists(resultsPath)
 print(isExists)
 
 if not isExists:
-    os.makedirs(path)
+    os.makedirs(resultsPath)
     print("results directory created")
 print(resultsPath)
 
