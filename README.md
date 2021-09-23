@@ -17,7 +17,12 @@ Do the following before running the program:
 2. Install python3
 3. Install all libraries in the import section of the script
 
-Now, we can run the program using python3 by doing the following:
+We will convert our notebook to a python file to ensure our script is up to date. Do the following:
+```bash
+jupyter nbconvert --to script benchmark.ipynb
+```
+
+Now, we can run the benchmark using python3 by doing the following:
 
 ```bash
 python3 benchmark.py
