@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[114]:
+# In[1]:
 
 
 import requests
@@ -17,7 +17,7 @@ import socket
 
 # Test Script
 
-# In[115]:
+# In[2]:
 
 
 payload = {'statement': 'select 1;', 'pretty': 'true', 'client_context_id': 'xyz'}
@@ -29,14 +29,14 @@ response.json()
 
 # Ask user for benchmark type (tiny or big)
 
-# In[116]:
+# In[3]:
 
 
-benchmarkType = input("Enter tiny for tiny benchmark or large for large benchmark: ")
+benchmarkType = input("Enter tiny for tiny benchmark or big for big benchmark: ")
 
 if benchmarkType == "tiny":
     isTiny = True
-elif benchmarkType == "large":
+elif benchmarkType == "big":
     isTiny = False
 else:
     print("Input is invalid. Defaulting to tiny benchmark.")
